@@ -21,10 +21,17 @@ public class UserController {
         return userService.saveUser(request);
     }
 
-   @GetMapping("/{id}")
+   /*@GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
         return userService.getUser(id);
+    }*/
+
+    @GetMapping("/{id}")
+    public UserResponse getUser(@PathVariable Long id){
+        return userService.getUser(id);
     }
+
+
     @GetMapping()
     public List<User> getAllUsers(){
         return userService.getAllUsers();
