@@ -1,6 +1,7 @@
 package com.bildadmbagara.campuscore.service;
 
 import com.bildadmbagara.campuscore.dto.CreateUserRequest;
+import com.bildadmbagara.campuscore.dto.UpdateUserRequest;
 import com.bildadmbagara.campuscore.dto.UserResponse;
 import com.bildadmbagara.campuscore.entity.User;
 import com.bildadmbagara.campuscore.enums.Role;
@@ -8,6 +9,7 @@ import com.bildadmbagara.campuscore.exception.UserNotFoundException;
 import com.bildadmbagara.campuscore.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,40 +29,57 @@ public class UserService {
         user.setPassword(request.getPassword());
         user.setRole(Role.STUDENT);
         user.setActive(true);
-        userRepository.save(user);
-        UserResponse response = new UserResponse();
-        response.setId(user.getId());
-        response.setFullName(user.getFullName());
-        response.setEmail(user.getEmail());
-        response.setUsername(user.getUsername());
-        response.setRole(user.getRole());
-        response.setActive(user.isActive());
-        return response;
+        User savedUser = userRepository.save(user);
+        return mapToResponse(savedUser);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getUsers() {
+        List <User> users = userRepository.findAll();
+        List <UserResponse> responses = new ArrayList<>();
+        for (User user : users) {
+            UserResponse response = mapToResponse(user);
+            responses.add(response);
+        }
+        return responses;
     }
 
-    /* public User getUser(Long id){
-         Optional<User> result = userRepository.findById(id);
-         if(result.isPresent()){
-             return result.get();
-         }
-         throw new UserNotFoundException("User with ID "+id+" was not found.");
-     }
- */
     public UserResponse getUser(Long id) {
 
         Optional<User> optionalUser = userRepository.findById(id);
         User user = optionalUser.orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        return mapToResponse(user);
+    }
+
+    //update an existing user
+    public UserResponse updateUser(Long id, UpdateUserRequest request){
+        Optional<User> optionalUser =
+                userRepository.findById(id);
+        User user = optionalUser.orElseThrow(()->new UserNotFoundException("User Not Found"));
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setUsername(request.getUsername());
+        User savedUser = userRepository.save(user);
+        return mapToResponse(savedUser);
+    }
+
+    public String deleteUser(Long id){
+        Optional<User> optionalUser =
+                userRepository.findById(id);
+        User user = optionalUser.orElseThrow(()->new UserNotFoundException("User Not Found"));
+        userRepository.delete(user);
+        return "User " + user.getFullName() + " deleted successfully.";
+    }
+    private UserResponse mapToResponse(User user) {
         UserResponse response = new UserResponse();
+
         response.setId(user.getId());
         response.setFullName(user.getFullName());
         response.setEmail(user.getEmail());
         response.setUsername(user.getUsername());
         response.setRole(user.getRole());
         response.setActive(user.isActive());
+
         return response;
     }
 }
+
