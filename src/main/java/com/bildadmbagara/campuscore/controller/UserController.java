@@ -5,8 +5,10 @@ import com.bildadmbagara.campuscore.dto.UpdateUserRequest;
 import com.bildadmbagara.campuscore.dto.UserResponse;
 import com.bildadmbagara.campuscore.entity.User;
 import com.bildadmbagara.campuscore.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponse createUser(@RequestBody CreateUserRequest request)
+    public UserResponse createUser(@Valid @RequestBody CreateUserRequest request)
     {
         return userService.saveUser(request);
     }
@@ -47,6 +49,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Long id) {
+
         return userService.deleteUser(id);
     }
 

@@ -6,6 +6,7 @@ import com.bildadmbagara.campuscore.dto.UserResponse;
 import com.bildadmbagara.campuscore.entity.User;
 import com.bildadmbagara.campuscore.enums.Role;
 import com.bildadmbagara.campuscore.exception.UserNotFoundException;
+import com.bildadmbagara.campuscore.mapper.UserMapper;
 import com.bildadmbagara.campuscore.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,10 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserMapper userMapper, UserRepository userRepository) {
+        this.userMapper = userMapper;
         this.userRepository = userRepository;
     }
 
@@ -30,14 +33,14 @@ public class UserService {
         user.setRole(Role.STUDENT);
         user.setActive(true);
         User savedUser = userRepository.save(user);
-        return mapToResponse(savedUser);
+        return userMapper.toResponse(savedUser);
     }
 
     public List<UserResponse> getUsers() {
         List <User> users = userRepository.findAll();
         List <UserResponse> responses = new ArrayList<>();
         for (User user : users) {
-            UserResponse response = mapToResponse(user);
+            UserResponse response = userMapper.toResponse(user);
             responses.add(response);
         }
         return responses;
@@ -47,7 +50,7 @@ public class UserService {
 
         Optional<User> optionalUser = userRepository.findById(id);
         User user = optionalUser.orElseThrow(() -> new UserNotFoundException("User Not Found"));
-        return mapToResponse(user);
+        return userMapper.toResponse(user);
     }
 
     //update an existing user
@@ -59,7 +62,7 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
         User savedUser = userRepository.save(user);
-        return mapToResponse(savedUser);
+        return userMapper.toResponse(savedUser);
     }
 
     public String deleteUser(Long id){
@@ -69,17 +72,6 @@ public class UserService {
         userRepository.delete(user);
         return "User " + user.getFullName() + " deleted successfully.";
     }
-    private UserResponse mapToResponse(User user) {
-        UserResponse response = new UserResponse();
 
-        response.setId(user.getId());
-        response.setFullName(user.getFullName());
-        response.setEmail(user.getEmail());
-        response.setUsername(user.getUsername());
-        response.setRole(user.getRole());
-        response.setActive(user.isActive());
-
-        return response;
-    }
 }
 
