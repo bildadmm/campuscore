@@ -25,7 +25,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserResponse saveUser(CreateUserRequest request) {
+    public UserResponse createUser(CreateUserRequest request) {
         validateDuplicateUser(request);
         User user = userMapper.toEntity(request);
         user.setRole(Role.STUDENT);
@@ -67,12 +67,13 @@ public class UserService {
         return userMapper.toResponse(savedUser);
     }
 
-    public String deleteUser(Long id){
-        Optional<User> optionalUser =
-                userRepository.findById(id);
-        User user = optionalUser.orElseThrow(()->new UserNotFoundException("User Not Found"));
+    public void deleteUser(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found."));
+
         userRepository.delete(user);
-        return "User " + user.getFullName() + " deleted successfully.";
     }
 
     private void validateDuplicateUser(CreateUserRequest request){
