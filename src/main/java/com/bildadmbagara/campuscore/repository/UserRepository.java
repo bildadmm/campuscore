@@ -3,6 +3,14 @@ package com.bildadmbagara.campuscore.repository;
 import com.bildadmbagara.campuscore.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
 
+public interface UserRepository extends JpaRepository<User, Long> {
+    boolean existsByEmail(String email);
+
+    boolean existsByUsername(String username);
+
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByUsername(String username);
 }
