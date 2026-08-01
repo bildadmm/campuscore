@@ -52,9 +52,7 @@ public class UserService {
     }
 
     //update an existing user
-    public UserResponse updateUser(
-            Long id,
-            UpdateUserRequest request) {
+    public UserResponse updateUser(Long id, UpdateUserRequest request) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
@@ -62,9 +60,7 @@ public class UserService {
 
         validateDuplicateUserForUpdate(id, request);
 
-        user.setFullName(request.getFullName());
-        user.setEmail(request.getEmail());
-        user.setUsername(request.getUsername());
+        userMapper.updateEntity(user, request);
 
         User savedUser = userRepository.save(user);
 

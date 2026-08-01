@@ -1,6 +1,7 @@
 package com.bildadmbagara.campuscore.mapper;
 
 import com.bildadmbagara.campuscore.dto.CreateUserRequest;
+import com.bildadmbagara.campuscore.dto.UpdateUserRequest;
 import com.bildadmbagara.campuscore.dto.UserResponse;
 import com.bildadmbagara.campuscore.entity.User;
 import org.springframework.stereotype.Component;
@@ -25,5 +26,14 @@ public class UserMapper {
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
         return user;
+    }
+
+    public void updateEntity(
+            User user,
+            UpdateUserRequest request) {
+
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setUsername(request.getUsername());
     }
 }
