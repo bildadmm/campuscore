@@ -28,10 +28,8 @@ public class UserMapper {
         return user;
     }
 
-    public void updateEntity(
-            User user,
+    public void updateEntity(User user,
             UpdateUserRequest request) {
-
         user.setFullName(request.getFullName());
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
