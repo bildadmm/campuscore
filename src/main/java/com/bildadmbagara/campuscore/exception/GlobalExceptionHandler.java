@@ -42,6 +42,13 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(SchoolNotFoundException.class)
+    public ResponseEntity<String>handleSchoolNotFoundException(SchoolNotFoundException exception){
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
     }
 
 
