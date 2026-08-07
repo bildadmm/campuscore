@@ -49,6 +49,28 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(DuplicateDepartmentException.class)
+    public ResponseEntity<String>handleDuplicateDepartmentException(Exception exception){
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(InactiveSchoolException.class)
+    public ResponseEntity<String>handleInactiveSchoolException(Exception exception){
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<String> handleDepartmentNotFoundException(
+            DepartmentNotFoundException exception) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
     }
 
 
